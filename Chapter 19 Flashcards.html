@@ -1,0 +1,1261 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chapter 19 Flashcards - 30 Questions</title>
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .container {
+            width: 100%;
+            max-width: 1200px;
+            height: 95vh;
+            max-height: 95vh;
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 15px 40px rgba(0,0,0,0.3);
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .header {
+            background: linear-gradient(135deg, #2c3e50, #3498db);
+            color: white;
+            padding: 15px;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+            flex-shrink: 0;
+        }
+        
+        .header::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" width="100" height="100" opacity="0.1"><path d="M30,30 Q50,10 70,30 T90,50 T70,70 T50,90 T30,70 T10,50 T30,30 Z" fill="white"/></svg>');
+        }
+        
+        .header h1 {
+            font-size: clamp(1.3rem, 4vw, 1.8rem);
+            margin-bottom: 8px;
+            position: relative;
+        }
+        
+        .header .subtitle {
+            font-size: clamp(0.8rem, 2.5vw, 1rem);
+            opacity: 0.9;
+            position: relative;
+        }
+        
+        .progress {
+            background: #34495e;
+            height: 8px;
+            width: 100%;
+            flex-shrink: 0;
+        }
+        
+        .progress-bar {
+            background: linear-gradient(90deg, #3498db, #2ecc71);
+            height: 100%;
+            width: 0%;
+            transition: width 0.4s ease;
+            border-radius: 0 4px 4px 0;
+        }
+        
+        .flashcard {
+            padding: clamp(10px, 3vw, 20px);
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            background: #f8f9fa;
+            overflow-y: auto;
+        }
+        
+        .question-container {
+            display: flex;
+            gap: clamp(10px, 2vw, 15px);
+            align-items: flex-start;
+            margin-bottom: clamp(10px, 2vw, 15px);
+        }
+        
+        .question-icon {
+            background: #3498db;
+            color: white;
+            width: clamp(35px, 8vw, 50px);
+            height: clamp(35px, 8vw, 50px);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: clamp(1rem, 3vw, 1.2rem);
+            font-weight: bold;
+            flex-shrink: 0;
+            box-shadow: 0 4px 8px rgba(52, 152, 219, 0.3);
+        }
+        
+        .question {
+            font-size: clamp(0.9rem, 2.5vw, 1.1rem);
+            line-height: 1.6;
+            color: #2c3e50;
+            flex-grow: 1;
+            font-weight: 500;
+        }
+        
+        .image-container {
+            margin: clamp(8px, 2vw, 15px) 0;
+            text-align: center;
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 6px 15px rgba(0,0,0,0.1);
+            max-height: clamp(120px, 20vh, 180px);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: #ecf0f1;
+        }
+        
+        .concept-image {
+            max-width: 100%;
+            max-height: clamp(110px, 18vh, 160px);
+            border-radius: 8px;
+            object-fit: cover;
+        }
+        
+        .hint-container {
+            margin: clamp(8px, 2vw, 15px) 0;
+            text-align: center;
+        }
+        
+        .options {
+            display: flex;
+            flex-direction: column;
+            gap: clamp(6px, 1.5vw, 10px);
+            margin-bottom: clamp(10px, 2vw, 20px);
+            flex: 1;
+        }
+        
+        .option {
+            padding: clamp(10px, 2vw, 14px) clamp(12px, 2.5vw, 18px);
+            border: 2px solid #bdc3c7;
+            border-radius: 12px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            background: white;
+            display: flex;
+            align-items: center;
+            gap: clamp(8px, 1.5vw, 10px);
+            font-size: clamp(0.85rem, 2vw, 1rem);
+        }
+        
+        .option:hover {
+            background: #e9ecef;
+            border-color: #95a5a6;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+        }
+        
+        .option-letter {
+            background: #ecf0f1;
+            color: #2c3e50;
+            width: clamp(24px, 5vw, 28px);
+            height: clamp(24px, 5vw, 28px);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            flex-shrink: 0;
+            transition: all 0.3s ease;
+            font-size: clamp(0.75rem, 1.8vw, 0.9rem);
+        }
+        
+        .option.correct {
+            background: #d4edda;
+            border-color: #28a745;
+            color: #155724;
+        }
+        
+        .option.correct .option-letter {
+            background: #28a745;
+            color: white;
+        }
+        
+        .option.incorrect {
+            background: #f8d7da;
+            border-color: #dc3545;
+            color: #721c24;
+        }
+        
+        .option.incorrect .option-letter {
+            background: #dc3545;
+            color: white;
+        }
+        
+        .feedback {
+            padding: clamp(12px, 2.5vw, 16px);
+            border-radius: 12px;
+            margin-bottom: clamp(10px, 2vw, 16px);
+            display: none;
+            align-items: center;
+            gap: clamp(8px, 1.5vw, 12px);
+            font-weight: 500;
+            font-size: clamp(0.85rem, 2vw, 1rem);
+        }
+        
+        .feedback.correct {
+            background: #d4edda;
+            border: 2px solid #28a745;
+            color: #155724;
+            display: flex;
+        }
+        
+        .feedback.incorrect {
+            background: #f8d7da;
+            border: 2px solid #dc3545;
+            color: #721c24;
+            display: flex;
+        }
+        
+        .feedback-icon {
+            font-size: clamp(1.2rem, 3vw, 1.4rem);
+            flex-shrink: 0;
+        }
+        
+        .navigation {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: clamp(12px, 2.5vw, 16px) clamp(16px, 3vw, 24px);
+            background: #ecf0f1;
+            border-top: 1px solid #bdc3c7;
+            flex-shrink: 0;
+        }
+        
+        .counter {
+            font-weight: bold;
+            color: #2c3e50;
+            font-size: clamp(0.85rem, 2vw, 1rem);
+        }
+        
+        .btn {
+            padding: clamp(10px, 2vw, 12px) clamp(15px, 2.5vw, 20px);
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: bold;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: clamp(6px, 1vw, 8px);
+            font-size: clamp(0.8rem, 1.8vw, 0.9rem);
+            white-space: nowrap;
+        }
+        
+        .btn-primary {
+            background: linear-gradient(135deg, #3498db, #2980b9);
+            color: white;
+        }
+        
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 12px rgba(52, 152, 219, 0.3);
+        }
+        
+        .btn-secondary {
+            background: linear-gradient(135deg, #95a5a6, #7f8c8d);
+            color: white;
+        }
+        
+        .btn-secondary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 12px rgba(149, 165, 166, 0.3);
+        }
+        
+        .btn-hint {
+            background: linear-gradient(135deg, #ffc107, #ff9800);
+            color: white;
+            padding: clamp(8px, 1.5vw, 10px) clamp(12px, 2vw, 16px);
+            font-size: clamp(0.75rem, 1.6vw, 0.85rem);
+        }
+        
+        .btn-hint:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 12px rgba(255, 193, 7, 0.3);
+        }
+        
+        .btn:disabled {
+            background: #bdc3c7;
+            cursor: not-allowed;
+            transform: none;
+            box-shadow: none;
+        }
+        
+        .rationale {
+            background: linear-gradient(135deg, #fff3cd, #ffeaa7);
+            border: 2px solid #ffd43b;
+            border-radius: 12px;
+            padding: clamp(12px, 2.5vw, 16px);
+            margin-top: clamp(8px, 1.5vw, 12px);
+            display: none;
+        }
+        
+        .rationale.show {
+            display: block;
+            animation: slideIn 0.5s ease;
+        }
+        
+        .rationale h4 {
+            color: #856404;
+            margin-bottom: clamp(6px, 1.2vw, 10px);
+            display: flex;
+            align-items: center;
+            gap: clamp(6px, 1.2vw, 8px);
+            font-size: clamp(0.9rem, 2.2vw, 1.1rem);
+        }
+        
+        .rationale p {
+            color: #856404;
+            line-height: 1.6;
+            font-size: clamp(0.8rem, 1.8vw, 0.95rem);
+        }
+        
+        .hint {
+            background: linear-gradient(135deg, #e3f2fd, #bbdefb);
+            border: 2px dashed #2196f3;
+            border-radius: 12px;
+            padding: clamp(12px, 2.5vw, 16px);
+            margin-top: clamp(6px, 1.2vw, 10px);
+            display: none;
+            animation: slideIn 0.5s ease;
+        }
+        
+        .hint.show {
+            display: block;
+        }
+        
+        .hint h4 {
+            color: #1565c0;
+            margin-bottom: clamp(6px, 1.2vw, 8px);
+            display: flex;
+            align-items: center;
+            gap: clamp(5px, 1vw, 6px);
+            font-size: clamp(0.85rem, 2vw, 1rem);
+        }
+        
+        .hint p {
+            color: #1565c0;
+            line-height: 1.5;
+            font-size: clamp(0.75rem, 1.6vw, 0.9rem);
+            font-style: italic;
+        }
+        
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        
+        .stats {
+            display: flex;
+            gap: clamp(8px, 1.5vw, 15px);
+            justify-content: center;
+            margin-top: clamp(4px, 1vw, 10px);
+            flex-wrap: wrap;
+        }
+        
+        .stat {
+            background: rgba(255,255,255,0.2);
+            padding: clamp(5px, 1vw, 6px) clamp(8px, 1.8vw, 12px);
+            border-radius: 20px;
+            font-size: clamp(0.7rem, 1.6vw, 0.85rem);
+            white-space: nowrap;
+        }
+        
+        /* Cancel selection button */
+        .cancel-selection {
+            background: linear-gradient(135deg, #ff6b6b, #ee5a52);
+            color: white;
+            margin: 0 auto clamp(10px, 2vw, 15px) auto;
+            display: none;
+        }
+        
+        .cancel-selection:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 12px rgba(255, 107, 107, 0.3);
+        }
+        
+        .cancel-selection.show {
+            display: flex;
+        }
+        
+        /* Mobile-specific adjustments */
+        @media (max-width: 768px) {
+            body {
+                padding: 5px;
+            }
+            
+            .container {
+                height: 100vh;
+                max-height: 100vh;
+                border-radius: 15px;
+            }
+            
+            .question-container {
+                flex-direction: column;
+                text-align: center;
+                gap: 8px;
+            }
+            
+            .question-icon {
+                align-self: center;
+            }
+            
+            .navigation {
+                flex-wrap: wrap;
+                gap: 8px;
+            }
+            
+            .btn {
+                padding: 10px 16px;
+                flex: 1;
+                justify-content: center;
+                min-width: 120px;
+            }
+            
+            .counter {
+                order: -1;
+                width: 100%;
+                text-align: center;
+            }
+        }
+        
+        @media (max-width: 480px) {
+            .flashcard {
+                padding: 8px;
+            }
+            
+            .navigation {
+                padding: 10px 12px;
+            }
+            
+            .btn {
+                padding: 8px 12px;
+                font-size: 0.8rem;
+                min-width: 100px;
+            }
+            
+            .options {
+                gap: 5px;
+            }
+            
+            .option {
+                padding: 8px 10px;
+            }
+        }
+        
+        /* Very small screens */
+        @media (max-width: 320px) {
+            .header h1 {
+                font-size: 1.1rem;
+            }
+            
+            .header .subtitle {
+                font-size: 0.75rem;
+            }
+            
+            .btn {
+                padding: 6px 10px;
+                font-size: 0.75rem;
+                min-width: 80px;
+            }
+        }
+        
+        /* Large screens optimization */
+        @media (min-width: 1400px) {
+            .container {
+                max-height: 1000px;
+            }
+            
+            .flashcard {
+                padding: 25px;
+            }
+        }
+        
+        /* Tall screens */
+        @media (min-height: 1000px) {
+            .flashcard {
+                padding: 25px;
+            }
+            
+            .question {
+                font-size: 1.2rem;
+            }
+            
+            .option {
+                font-size: 1.1rem;
+            }
+        }
+        
+        /* Short screens */
+        @media (max-height: 600px) {
+            .header {
+                padding: 10px;
+            }
+            
+            .flashcard {
+                padding: 8px;
+            }
+            
+            .question-icon {
+                width: 35px;
+                height: 35px;
+                font-size: 1rem;
+            }
+            
+            .question {
+                font-size: 0.9rem;
+            }
+            
+            .image-container {
+                max-height: 100px;
+            }
+            
+            .concept-image {
+                max-height: 90px;
+            }
+            
+            .options {
+                gap: 5px;
+            }
+            
+            .option {
+                padding: 6px 8px;
+                font-size: 0.8rem;
+            }
+            
+            .option-letter {
+                width: 20px;
+                height: 20px;
+                font-size: 0.7rem;
+            }
+            
+            .navigation {
+                padding: 8px 10px;
+            }
+            
+            .btn {
+                padding: 6px 10px;
+                font-size: 0.8rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>📚 Chapter 19 Flashcards</h1>
+            <div class="subtitle">Nursing Management of Pregnancy at Risk: Pregnancy-Related Complications - 30 Questions</div>
+            <div class="stats">
+                <div class="stat">🎯 30 Questions</div>
+                <div class="stat">💡 Hint Feature</div>
+                <div class="stat">📖 Visual Learning</div>
+                <div class="stat">↩️ Cancel Wrong Answers</div>
+            </div>
+        </div>
+        <div class="progress">
+            <div class="progress-bar" id="progressBar"></div>
+        </div>
+        
+        <div class="flashcard">
+            <div class="question-container">
+                <div class="question-icon">?</div>
+                <div class="question" id="question"></div>
+            </div>
+            <div class="image-container" id="imageContainer">
+                <img class="concept-image" id="conceptImage" alt="Educational illustration">
+            </div>
+            
+            <div class="hint-container">
+                <button class="btn btn-hint" id="hintBtn" onclick="showHint()">
+                    💡 Show Hint
+                </button>
+                <div class="hint" id="hint">
+                    <h4>💡 Study Tip:</h4>
+                    <p id="hintText"></p>
+                </div>
+            </div>
+            
+            <div class="options" id="options"></div>
+            
+            <!-- Cancel Selection Button - Only shows for wrong answers -->
+            <button class="btn cancel-selection" id="cancelBtn" onclick="cancelSelection()">
+                ↩️ Cancel Selection
+            </button>
+            
+            <div class="feedback" id="feedback">
+                <div class="feedback-icon" id="feedbackIcon"></div>
+                <div id="feedbackText"></div>
+            </div>
+            <div class="rationale" id="rationale">
+                <h4>💡 Rationale:</h4>
+                <p id="rationaleText"></p>
+            </div>
+        </div>
+        
+        <div class="navigation">
+            <button class="btn btn-secondary" id="prevBtn" onclick="previousCard()">
+                ⬅️ Previous
+            </button>
+            <div class="counter" id="counter">1/30</div>
+            <button class="btn btn-primary" id="nextBtn" onclick="nextCard()">
+                Next ➡️
+            </button>
+        </div>
+    </div>
+
+    <script>
+        const medicalImages = {
+            'gestational_trophoblastic': 'https://images.unsplash.com/photo-1559757175-0eb30cd8c063?w=400&h=200&fit=crop',
+            'magnesium_sulfate': 'https://images.unsplash.com/photo-1584308666744-24d5c474f2ae?w=400&h=200&fit=crop',
+            'spontaneous_abortion': 'https://images.unsplash.com/photo-1599669454699-248893623440?w=400&h=200&fit=crop',
+            'ectopic_pregnancy': 'https://images.unsplash.com/photo-1584467735871-8db9ac8e5e3a?w=400&h=200&fit=crop',
+            'rh_isoimmunization': 'https://images.unsplash.com/photo-1584308666744-24d5c474f2ae?w=400&h=200&fit=crop',
+            'multiple_gestation': 'https://images.unsplash.com/photo-1511895426328-dc8714191300?w=400&h=200&fit=crop',
+            'preeclampsia_risk': 'https://images.unsplash.com/photo-1559757148-5c350d0d3c56?w=400&h=200&fit=crop',
+            'hyperemesis': 'https://images.unsplash.com/photo-1584308666744-24d5c474f2ae?w=400&h=200&fit=crop',
+            'hellp_syndrome': 'https://images.unsplash.com/photo-1559757148-5c350d0d3c56?w=400&h=200&fit=crop',
+            'calcium_gluconate': 'https://images.unsplash.com/photo-1584308666744-24d5c474f2ae?w=400&h=200&fit=crop',
+            'prom': 'https://images.unsplash.com/photo-1584467735871-8db9ac8e5e3a?w=400&h=200&fit=crop',
+            'hellp_labs': 'https://images.unsplash.com/photo-1582719471384-894fbb16e074?w=400&h=200&fit=crop',
+            'hydramnios': 'https://images.unsplash.com/photo-1584467735871-8db9ac8e5e3a?w=400&h=200&fit=crop',
+            'genetic_abnormalities': 'https://images.unsplash.com/photo-1582719471384-894fbb16e074?w=400&h=200&fit=crop',
+            'infection_signs': 'https://images.unsplash.com/photo-1559757148-5c350d0d3c56?w=400&h=200&fit=crop',
+            'home_care': 'https://images.unsplash.com/photo-1511895426328-dc8714191300?w=400&h=200&fit=crop',
+            'severe_preeclampsia': 'https://images.unsplash.com/photo-1559757148-5c350d0d3c56?w=400&h=200&fit=crop',
+            'placental_abruption': 'https://images.unsplash.com/photo-1584467735871-8db9ac8e5e3a?w=400&h=200&fit=crop',
+            'pge2': 'https://images.unsplash.com/photo-1584308666744-24d5c474f2ae?w=400&h=200&fit=crop',
+            'prom_risk': 'https://images.unsplash.com/photo-1559757148-5c350d0d3c56?w=400&h=200&fit=crop',
+            'placenta_previa': 'https://images.unsplash.com/photo-1584467735871-8db9ac8e5e3a?w=400&h=200&fit=crop',
+            'nausea_management': 'https://images.unsplash.com/photo-1584308666744-24d5c474f2ae?w=400&h=200&fit=crop',
+            'eclampsia': 'https://images.unsplash.com/photo-1559757148-5c350d0d3c56?w=400&h=200&fit=crop',
+            'magnesium_levels': 'https://images.unsplash.com/photo-1582719471384-894fbb16e074?w=400&h=200&fit=crop',
+            'home_monitoring': 'https://images.unsplash.com/photo-1511895426328-dc8714191300?w=400&h=200&fit=crop',
+            'abortion_types': 'https://images.unsplash.com/photo-1584467735871-8db9ac8e5e3a?w=400&h=200&fit=crop',
+            'reflex_grading': 'https://images.unsplash.com/photo-1559757148-5c350d0d3c56?w=400&h=200&fit=crop',
+            'mifepristone': 'https://images.unsplash.com/photo-1584308666744-24d5c474f2ae?w=400&h=200&fit=crop',
+            'bleeding_assessment': 'https://images.unsplash.com/photo-1584467735871-8db9ac8e5e3a?w=400&h=200&fit=crop'
+        };
+
+        const questions = [
+            {
+                question: "After teaching a woman who has had an evacuation for gestational trophoblastic disease (hydatidiform mole or molar pregnancy) about her condition, which statement indicates that the nurse's teaching was successful?",
+                options: [
+                    "\"I will be sure to avoid getting pregnant for at least 1 year.\"",
+                    "\"My intake of iron will have to be closely monitored for 6 months.\"",
+                    "\"My blood pressure will continue to be increased for about 6 more months.\"",
+                    "\"I won't use my birth control pills for at least a year or two.\""
+                ],
+                correct: 0,
+                rationale: "After evacuation of trophoblastic tissue (hydatiform mole), long-term follow-up is necessary to make sure any remaining trophoblastic tissue does not become malignant. Serial hCG levels are monitored closely for 1 year, and the client is urged to avoid pregnancy for 1 year because it can interfere with the monitoring of hCG levels. Iron intake and blood pressure are not important aspects of follow up after evacuation of a hydatiform mole. Use of a reliable contraceptive is strongly recommended so that pregnancy is avoided.",
+                image: 'gestational_trophoblastic',
+                hint: "Think about the need for monitoring hCG levels and why pregnancy would interfere with this."
+            },
+            {
+                question: "A client is diagnosed with gestational hypertension and is receiving magnesium sulfate. The nurse determines that the medication is at a therapeutic level based on which finding?",
+                options: [
+                    "urinary output of 20 mL per hour",
+                    "respiratory rate of 10 breaths/minute",
+                    "deep tendons reflexes 2+",
+                    "difficulty in arousing"
+                ],
+                correct: 2,
+                rationale: "With magnesium sulfate, deep tendon reflexes of 2+ would be considered normal and therefore a therapeutic level of the drug. Urinary output of less than 30 mL, a respiratory rate of less than 12 breaths/minute, and a diminished level of consciousness would indicate magnesium toxicity.",
+                image: 'magnesium_sulfate',
+                hint: "Think about normal versus toxic signs when monitoring magnesium sulfate therapy."
+            },
+            {
+                question: "Upon entering the room of a client who has had a spontaneous abortion, the nurse observes the client crying. Which response by the nurse would be most appropriate?",
+                options: [
+                    "\"Why are you crying?\"",
+                    "\"Will a pill help your pain?\"",
+                    "\"I'm sorry you lost your baby.\"",
+                    "\"A baby still wasn't formed in your uterus.\""
+                ],
+                correct: 2,
+                rationale: "Telling the client that the nurse is sorry for the loss acknowledges the loss to the woman, validates her feelings, and brings the loss into reality. Asking why the client is crying is ineffective at this time. Offering a pill for the pain ignores the client's feelings. Telling the client that the baby was not formed is inappropriate and discounts any feelings or beliefs that the client has.",
+                image: 'spontaneous_abortion',
+                hint: "Consider therapeutic communication techniques for grief and loss situations."
+            },
+            {
+                question: "A nurse is reviewing a client's history and physical examination findings. Which information would the nurse identify as contributing to the client's risk for an ectopic pregnancy?",
+                options: [
+                    "use of oral contraceptives for 5 years",
+                    "ovarian cyst 2 years ago",
+                    "recurrent pelvic infections",
+                    "heavy, irregular menses"
+                ],
+                correct: 2,
+                rationale: "In the general population, most cases of ectopic pregnancy are the result of tubal scarring secondary to pelvic inflammatory disease. Oral contraceptives, ovarian cysts, and heavy, irregular menses are not considered risk factors for ectopic pregnancy.",
+                image: 'ectopic_pregnancy',
+                hint: "Think about conditions that can cause scarring or damage to the fallopian tubes."
+            },
+            {
+                question: "A client is suspected of having a ruptured ectopic pregnancy. Which assessment would the nurse identify as the priority?",
+                options: [
+                    "hemorrhage",
+                    "jaundice",
+                    "edema",
+                    "infection"
+                ],
+                correct: 0,
+                rationale: "With a ruptured ectopic pregnancy, the woman is at high risk for hemorrhage. Jaundice, edema, and infection are not associated with a ruptured ectopic pregnancy.",
+                image: 'ectopic_pregnancy',
+                hint: "Consider the most immediate life-threatening complication of a ruptured ectopic pregnancy."
+            },
+            {
+                question: "It is determined that a client's blood Rh is negative and her partner's is Rh positive. To help prevent Rh isoimmunization, the nurse would expect to administer Rho(D) immune globulin at which time?",
+                options: [
+                    "at 32 weeks' gestation and immediately before discharge",
+                    "24 hours before birth and 24 hours after birth",
+                    "in the first trimester and within 2 hours of birth",
+                    "at 28 weeks' gestation and again within 72 hours after birth"
+                ],
+                correct: 3,
+                rationale: "To prevent isoimmunization, the woman should receive Rho(D) immune globulin at 28 weeks and again within 72 hours after birth.",
+                image: 'rh_isoimmunization',
+                hint: "Remember the standard timing for RhoGAM administration during pregnancy and postpartum."
+            },
+            {
+                question: "A woman pregnant with twins comes to the clinic for an evaluation. While assessing the client, the nurse would be especially alert for signs and symptoms for which potential problem?",
+                options: [
+                    "oligohydramnios",
+                    "preeclampsia",
+                    "post-term labor",
+                    "chorioamnionitis"
+                ],
+                correct: 1,
+                rationale: "Women with multiple gestations are at high risk for preeclampsia, preterm labor, polyhydramnios, hyperemesis gravidarum, anemia, and antepartal hemorrhage. There is no association between multiple gestations and the development of chorioamnionitis.",
+                image: 'multiple_gestation',
+                hint: "Multiple pregnancies increase the risk for certain hypertensive disorders of pregnancy."
+            },
+            {
+                question: "A client comes to the clinic for an evaluation. The client is at 22 weeks' gestation. After reviewing a client's history, which factor would the nurse identify as placing her at risk for preeclampsia?",
+                options: [
+                    "Her mother had preeclampsia during pregnancy.",
+                    "Client has a twin sister.",
+                    "Her sister-in-law had gestational hypertension.",
+                    "This is the client's second pregnancy."
+                ],
+                correct: 0,
+                rationale: "A family history of preeclampsia, such as a mother or sister, is considered a risk factor for the client. Having a twin sister or having a sister-in-law with gestational hypertension would not increase the client's risk. If the client had a history of preeclampsia in her first pregnancy, then she would be at risk in her second pregnancy.",
+                image: 'preeclampsia_risk',
+                hint: "Consider genetic and familial risk factors for preeclampsia."
+            },
+            {
+                question: "A client with hyperemesis gravidarum is admitted to the facility after being cared for at home without success. What would the nurse expect to include in the client's plan of care?",
+                options: [
+                    "clear liquid diet",
+                    "total parenteral nutrition",
+                    "nothing by mouth",
+                    "administration of labetalol"
+                ],
+                correct: 2,
+                rationale: "Typically, on admission, the woman with hyperemesis has oral food and fluids withheld to rest the gut and receives parenteral fluids to rehydrate and reduce the symptoms. Once the condition stabilizes, oral intake is gradually increased. Total parenteral nutrition may be used if the client's condition does not improve with several days of bed rest, gut rest, IV fluids, and antiemetics. Labetalol is an antihypertensive agent that may be used to treat gestational hypertension, not hyperemesis.",
+                image: 'hyperemesis',
+                hint: "Initial management often involves gut rest to break the cycle of vomiting."
+            },
+            {
+                question: "A nurse suspects that a client is developing HELLP syndrome. The nurse notifies the health care provider based on which finding?",
+                options: [
+                    "hyperglycemia",
+                    "elevated platelet count",
+                    "disseminated intravascular coagulation (DIC)",
+                    "elevated liver enzymes"
+                ],
+                correct: 3,
+                rationale: "HELLP is an acronym for hemolysis, elevated liver enzymes, and low platelets. Hyperglycemia is not a part of this syndrome. HELLP may increase the woman's risk for DIC but it is not an assessment finding.",
+                image: 'hellp_syndrome',
+                hint: "Remember what the acronym HELLP stands for."
+            },
+            {
+                question: "A client with severe preeclampsia is receiving magnesium sulfate as part of the treatment plan. To ensure the client's safety, which compound would the nurse have readily available?",
+                options: [
+                    "calcium gluconate",
+                    "potassium chloride",
+                    "ferrous sulfate",
+                    "calcium carbonate"
+                ],
+                correct: 0,
+                rationale: "The woman is at risk for magnesium toxicity. The antidote for magnesium sulfate is calcium gluconate, and this should be readily available in case the woman has signs and symptoms of magnesium toxicity.",
+                image: 'calcium_gluconate',
+                hint: "Think about the specific antidote for magnesium sulfate toxicity."
+            },
+            {
+                question: "A nurse is conducting an assessment of a woman who has experienced PROM. Which amniotic fluid finding would lead the nurse to suspect infection as the cause of a client's PROM?",
+                options: [
+                    "yellow-green fluid",
+                    "blue color on Nitrazine testing",
+                    "ferning",
+                    "foul odor"
+                ],
+                correct: 3,
+                rationale: "A foul odor of the amniotic fluid indicates infection. Yellow-green fluid would suggest meconium. A blue color on Nitrazine testing and ferning indicate the presence of amniotic fluid.",
+                image: 'prom',
+                hint: "Think about signs that specifically indicate infection rather than just the presence of amniotic fluid."
+            },
+            {
+                question: "The nurse is reviewing the laboratory test results of a pregnant client. Which finding would alert the nurse to the development of HELLP syndrome?",
+                options: [
+                    "hyperglycemia",
+                    "elevated platelet count",
+                    "leukocytosis",
+                    "elevated liver enzymes"
+                ],
+                correct: 3,
+                rationale: "HELLP is an acronym for hemolysis, elevated liver enzymes, and low platelets. Hyperglycemia or leukocytosis is not a part of this syndrome.",
+                image: 'hellp_labs',
+                hint: "Remember the key laboratory abnormalities in HELLP syndrome."
+            },
+            {
+                question: "While assessing a pregnant woman, the nurse suspects that the client may be at risk for hydramnios. Which information would the nurse use to support this suspicion? Select all that apply.",
+                options: [
+                    "history of diabetes",
+                    "reports of shortness of breath",
+                    "identifiable fetal parts on abdominal palpation",
+                    "difficulty obtaining fetal heart rate",
+                    "fundal height below that for expected gestational age"
+                ],
+                correct: 0,
+                rationale: "Factors such as maternal diabetes or multiple gestations place the woman at risk for hydramnios. In addition, there is a discrepancy between fundal height and gestational age, such that a rapid growth of the uterus is noted. Shortness of breath may result from overstretching of the uterus due to the increased amount of amniotic fluid. Often, fetal parts are difficult to palpate and fetal heart rate is difficult to obtain because of the excess fluid present.",
+                image: 'hydramnios',
+                hint: "Consider both risk factors and clinical manifestations of excess amniotic fluid."
+            },
+            {
+                question: "A nurse is conducting an in-service program for a group of nurses working at the women's health facility about the causes of spontaneous abortion. The nurse determines that the teaching was successful when the group identifies which condition as the most common cause of first trimester abortions?",
+                options: [
+                    "maternal disease",
+                    "cervical insufficiency",
+                    "fetal genetic abnormalities",
+                    "uterine fibroids"
+                ],
+                correct: 2,
+                rationale: "The causes of spontaneous abortion are varied and often unknown. The most common cause for first-trimester abortions is fetal genetic abnormalities, usually unrelated to the mother. Chromosomal abnormalities are more likely causes in first trimester, and maternal disease is more likely in the second trimester. Those occurring during the second trimester are more likely related to maternal conditions, such as cervical insufficiency, congenital, or acquired anomaly of the uterine cavity (uterine septum or fibroids), hypothyroidism, diabetes mellitus, chronic nephritis, use of crack cocaine, inherited and acquired thrombophilias, lupus, polycystic ovary syndrome, severe hypertension, and acute infection such as rubella virus, cytomegalovirus, herpes simplex virus, bacterial vaginosis, and toxoplasmosis.",
+                image: 'genetic_abnormalities',
+                hint: "Think about the most frequent cause of early pregnancy loss."
+            },
+            {
+                question: "A pregnant woman is admitted with premature rupture of the membranes. The nurse is assessing the woman closely for possible infection. Which findings would lead the nurse to suspect that the woman is developing an infection? Select all that apply.",
+                options: [
+                    "fetal bradycardia",
+                    "abdominal tenderness",
+                    "elevated maternal pulse rate",
+                    "decreased C-reactive protein levels",
+                    "cloudy malodorous fluid"
+                ],
+                correct: 1,
+                rationale: "Possible signs of infection associated with premature rupture of membranes include elevation of maternal temperature and pulse rate, abdominal/uterine tenderness, fetal tachycardia over 160 bpm, elevated white blood cell count and C-reactive protein levels, and cloudy, foul-smelling amniotic fluid.",
+                image: 'infection_signs',
+                hint: "Look for signs of systemic infection and local uterine infection."
+            },
+            {
+                question: "A nurse is teaching a pregnant woman with preterm prelabor rupture of membranes about caring for herself after she is discharged home (which is to occur later this day). Which statement by the woman indicates a need for additional teaching?",
+                options: [
+                    "\"I need to keep a close eye on how active my baby is each day.\"",
+                    "\"I need to call my doctor if my temperature increases.\"",
+                    "\"It's okay for my husband and me to have sexual intercourse.\"",
+                    "\"I can shower, but I shouldn't take a tub bath.\""
+                ],
+                correct: 2,
+                rationale: "The woman with preterm prelabor rupture of membranes should monitor her baby's activity by performing fetal kick counts daily, check her temperature and report any increases to the health care provider, not insert anything into her vagina or vaginal area, such as tampons or vaginal intercourse, and avoid sitting in a tub bath.",
+                image: 'home_care',
+                hint: "Consider activities that could introduce bacteria into the vagina after membrane rupture."
+            },
+            {
+                question: "A nurse is assessing a pregnant woman with gestational hypertension. Which finding would lead the nurse to suspect that the client has developed severe preeclampsia?",
+                options: [
+                    "urine protein 300 mg/24 hours",
+                    "blood pressure 150/96 mm Hg",
+                    "mild facial edema",
+                    "hyperreflexia"
+                ],
+                correct: 3,
+                rationale: "Severe preeclampsia is characterized by blood pressure over 160/110 mm Hg, urine protein levels greater than 500 mg/24 hours, and hyperreflexia. Mild facial edema is associated with mild preeclampsia.",
+                image: 'severe_preeclampsia',
+                hint: "Look for neurological signs that indicate more severe disease."
+            },
+            {
+                question: "A nurse suspects that a pregnant client may be experiencing a placental abruption based on assessment of which finding? Select all that apply.",
+                options: [
+                    "dark red vaginal bleeding",
+                    "insidious onset",
+                    "absence of pain",
+                    "rigid uterus",
+                    "absent fetal heart tones"
+                ],
+                correct: 0,
+                rationale: "Assessment findings associated with a placental abruption include a sudden onset with concealed or visible dark red bleeding, constant pain or uterine tenderness on palpation, firm to rigid uterine tone, and fetal distress or absent fetal heart tones.",
+                image: 'placental_abruption',
+                hint: "Think about the classic triad of symptoms in placental abruption."
+            },
+            {
+                question: "The health care provider prescribes PGE2 for a woman to help evacuate the uterus following a spontaneous abortion. Which action would be most important for the nurse to do?",
+                options: [
+                    "Use clean technique to administer the drug.",
+                    "Keep the gel cool until ready to use.",
+                    "Maintain the client supine for 30 minutes after administration.",
+                    "Administer intramuscularly into the deltoid area."
+                ],
+                correct: 2,
+                rationale: "When PGE2 is prescribed, the gel should come to room temperature before administering it. Sterile technique should be used, and the client should remain supine for 30 minutes after administration. Rho(D) immune globulin is administered intramuscularly into the deltoid area.",
+                image: 'pge2',
+                hint: "Consider the proper administration technique for vaginal medications."
+            },
+            {
+                question: "A nurse is reviewing an article about preterm prelabor rupture of membranes. Which factors would the nurse expect to find placing a woman at high risk for this condition? Select all that apply.",
+                options: [
+                    "high body mass index",
+                    "urinary tract infection",
+                    "low socioeconomic status",
+                    "single gestations",
+                    "smoking"
+                ],
+                correct: 1,
+                rationale: "High-risk factors associated with prelabor rupture of membranes (PROM) include low socioeconomic status, multiple gestation, low body mass index, tobacco use, preterm labor history, placenta previa, abruptio placenta, urinary tract infection, vaginal bleeding at any time in pregnancy, cerclage, and amniocentesis.",
+                image: 'prom_risk',
+                hint: "Consider infections and socioeconomic factors that increase PROM risk."
+            },
+            {
+                question: "A woman with placenta previa is being treated with expectant management. The woman and fetus are stable. The nurse is assessing the woman for possible discharge home. Which statement by the woman would suggest to the nurse that home care might be inappropriate?",
+                options: [
+                    "\"My mother lives next door and can drive me here if necessary.\"",
+                    "\"I have a toddler and preschooler at home who need my attention.\"",
+                    "\"I know to call my health care provider right away if I start to bleed again.\"",
+                    "\"I realize the importance of following the instructions for my care.\""
+                ],
+                correct: 1,
+                rationale: "Having a toddler and preschooler at home needing attention suggest that the woman would have difficulty maintaining bed rest at home. Therefore, expectant management at home may not be appropriate. Expectant management is appropriate if the mother and fetus are both stable, there is no active bleeding, the client has readily available access to reliable transportation, and can comprehend instructions.",
+                image: 'placenta_previa',
+                hint: "Consider the practical requirements for successful home management of placenta previa."
+            },
+            {
+                question: "A woman with hyperemesis gravidarum asks the nurse about suggestions to minimize nausea and vomiting. Which suggestion would be most appropriate for the nurse to make?",
+                options: [
+                    "\"Make sure that anything around your waist is quite snug.\"",
+                    "\"Try to eat three large meals a day with less snacking.\"",
+                    "\"Drink fluids in between meals rather than with meals.\"",
+                    "\"Lie down for about an hour after you eat.\""
+                ],
+                correct: 2,
+                rationale: "Suggestions to minimize nausea and vomiting include avoiding tight waistbands to minimize pressure on the abdomen, eating small frequent meals throughout the day, separating fluids from solids by consuming fluids in between meals; and avoiding lying down or reclining for at least 2 hours after eating.",
+                image: 'nausea_management',
+                hint: "Think about dietary strategies that reduce gastric distention."
+            },
+            {
+                question: "A woman with gestational hypertension develops eclampsia and experiences a seizure. Which intervention would the nurse identify as the priority?",
+                options: [
+                    "fluid replacement",
+                    "oxygenation",
+                    "control of hypertension",
+                    "birth of the fetus"
+                ],
+                correct: 1,
+                rationale: "As with any seizure, the priority is to clear the airway and maintain adequate oxygenation both to the mother and the fetus. Fluids and control of hypertension are addressed once the airway and oxygenation are maintained. Delivery of fetus is determined once the seizures are controlled and the woman is stable.",
+                image: 'eclampsia',
+                hint: "Remember the ABCs (Airway, Breathing, Circulation) in emergency situations."
+            },
+            {
+                question: "A woman is receiving magnesium sulfate as part of her treatment for severe preeclampsia. The nurse is monitoring the woman's serum magnesium levels. The nurse determines that the drug is at a therapeutic level based on which result?",
+                options: [
+                    "3.3 mEq/L",
+                    "6.1 mEq/L",
+                    "8.4 mEq/L",
+                    "10.8 mEq/L"
+                ],
+                correct: 1,
+                rationale: "Although exact levels may vary among agencies, serum magnesium levels ranging from 4 to 7 mEq/L are considered therapeutic, whereas levels more than 8 mEq/dL are generally considered toxic.",
+                image: 'magnesium_levels',
+                hint: "Know the therapeutic range for magnesium sulfate in preeclampsia treatment."
+            },
+            {
+                question: "A nurse is teaching a woman with mild preeclampsia about important areas that she needs to monitor at home. The nurse determines that the teaching was successful based on which statements by the woman? Select all that apply.",
+                options: [
+                    "\"I should check my blood pressure twice a day.\"",
+                    "\"I will weigh myself once a week.\"",
+                    "\"I should complete a fetal kick count each day.\"",
+                    "\"I will check my urine for protein four times a day.\"",
+                    "\"I'll call my health care provider if I have burning when I urinate.\""
+                ],
+                correct: 0,
+                rationale: "The client should take her blood pressure twice daily, check and record weight daily, perform urine dipstick checks for protein twice daily, record the number of fetal kicks daily, and notify her health care provider if she experiences burning on urination.",
+                image: 'home_monitoring',
+                hint: "Consider the frequency needed for effective monitoring of preeclampsia symptoms."
+            },
+            {
+                question: "A client comes to the emergency department with moderate vaginal bleeding. She says, \"I have had to change my pad about every 2 hours and it looks like I may have passed some tissue and clots.\" The woman reports that she is 9 weeks' pregnant. Further assessment reveals the following: • Cervical dilation • Strong abdominal cramping • Low human chorionic gonadotropin (hCG) levels • Ultrasound positive for products of conception. The nurse suspects that the woman is experiencing which type of spontaneous abortion?",
+                options: [
+                    "Threatened",
+                    "Inevitable",
+                    "Incomplete",
+                    "Complete"
+                ],
+                correct: 1,
+                rationale: "Based on the assessment findings, the woman is likely experiencing an inevitable abortion characterized by vaginal bleeding, rupture of membranes, cervical dilation, strong abdominal cramping, possible passage of products of conception, and ultrasound and hCG levels indicating pregnancy loss. A threatened abortion is characterized by slight vaginal bleeding, no cervical dilation or change in cervical consistency, mild abdominal cramping, close cervical os, and no passage of fetal tissue. An incomplete abortion is characterized by intense abdominal cramping, heavy vaginal bleeding and cervical dilation with passage of some products of conception. A complete abortion is characterized by a history of vaginal bleeding and abdominal pain along with passage of tissue and subsequent decrease in pain and decrease in bleeding.",
+                image: 'abortion_types',
+                hint: "Look for the key finding of cervical dilation with ongoing symptoms."
+            },
+            {
+                question: "A pregnant client with preeclampsia is being treated with intravenous magnesium sulfate. The nurse assesses the client's deep tendon reflexes and grades them as 4+. The nurse notifies the health care provider about this finding, describing them using which term to ensure accurate communication?",
+                options: [
+                    "Absent",
+                    "Average",
+                    "Brisk",
+                    "Clonus"
+                ],
+                correct: 3,
+                rationale: "The National Institute of Neurological Disorders and Stroke, a division of the National Institutes of Health, published a scale in the early 1990s that, though subjective, is used widely today. It grades reflexes from 0 to 4+. Grades 2+ and 3+ are considered normal, and grades 0 which indicates an absent reflex and 4 which indicates clonus may indicate pathology. Because these are subjective assessments, to improve communication of reflex results, condensed descriptor categories such as absent, average, brisk, or clonus should be used rather than numeric codes. A 4+ grade indicates clonus which is the presence of rhythmic involuntary contractions, most often at the foot or ankle. Sustained clonus confirms central nervous system involvement.",
+                image: 'reflex_grading',
+                hint: "Know the clinical significance of different reflex grades in preeclampsia."
+            },
+            {
+                question: "A client who has experienced an incomplete abortion is prescribed mifepristone to assist in removing the retained products of conception. Which medication would the nurse expect to administer if prescribed before administering mifepristone?",
+                options: [
+                    "Opioid analgesic for relief of cramping",
+                    "Antiemetic to minimize nausea",
+                    "Vitamin K to reduce bleeding",
+                    "Diuretic to promote fluid loss"
+                ],
+                correct: 1,
+                rationale: "For the client receiving mifepristone, the nurse would anticipate administering an antiemetic beforehand to reduce nausea and vomiting. Acetaminophen would be useful for pain relief, not an opioid. Vitamin K or a diuretic would not be appropriate when administering mifepristone. Vitamin K would be used to counteract bleeding such as that associated with heparin administration. A diuretic would be appropriate to promote fluid excretion with fluid overload.",
+                image: 'mifepristone',
+                hint: "Consider common side effects of medications used for medical abortion."
+            },
+            {
+                question: "A client at 33 weeks' gestation comes to the emergency department with vaginal bleeding. Assessment reveals the following: • Onset of slight vaginal bleeding at 29 weeks with spontaneous cessation • Recent onset of bright red vaginal bleeding, more than with previous episode • No uterine contractions at present • Fetal heart rate within normal range • Uterus soft and nontender. Based on the assessment findings, which condition would the nurse likely suspect?",
+                options: [
+                    "Placental abruption",
+                    "Placenta previa",
+                    "Ruptured ectopic pregnancy",
+                    "Polyhydramnios"
+                ],
+                correct: 1,
+                rationale: "The assessment findings suggest placenta previa, a bleeding condition that occurs during the last two trimesters of pregnancy. It is characterized by slight bright red vaginal bleeding initially that stops spontaneously and then recurs later in amounts greater than the initial episode; absence of pain/contractions; soft, relaxed uterine tone; and a fetal heart rate within normal parameters. Placental abruption is characterized by a sudden onset with concealed or visible dark vaginal bleeding, uterine tenderness and pain, with a firm or rigid uterus and fetal distress. The hallmark of ectopic pregnancy is abdominal pain with spotting within 6 to 8 weeks after a missed menstrual period. If ectopic rupture or hemorrhage occurs before treatment begins, symptoms may worsen and include severe, sharp, and sudden pain in the lower abdomen as the tube tears open and the embryo is expelled into the pelvic cavity; feelings of faintness; referred pain to the shoulder area, indicating bleeding into the abdomen caused by phrenic nerve irritation; hypotension; marked abdominal tenderness with distention; and hypovolemic shock. Polyhydramnios is initially suspected when uterine enlargement, maternal abdominal girth, and fundal height are larger than expected for the fetus's gestational age. With polyhydramnios, there is a discrepancy between fundal height and gestational age, or a rapid growth of the uterus is noted. Shortness of breath and uterine contractions from overstretching may occur. Often the fetal parts and heart rate are difficult to obtain because of the excess fluid present.",
+                image: 'bleeding_assessment',
+                hint: "Look for the characteristic painless bleeding pattern of placenta previa."
+            }
+        ];
+
+        let currentQuestion = 0;
+        let selectedOption = null;
+        let score = 0;
+        let answers = Array(questions.length).fill(null);
+
+        function loadQuestion() {
+            const question = questions[currentQuestion];
+            document.getElementById('question').textContent = question.question;
+            document.getElementById('counter').textContent = `${currentQuestion + 1}/${questions.length}`;
+            
+            // Update progress bar
+            const progress = ((currentQuestion + 1) / questions.length) * 100;
+            document.getElementById('progressBar').style.width = `${progress}%`;
+            
+            // Load image
+            const imageContainer = document.getElementById('imageContainer');
+            const conceptImage = document.getElementById('conceptImage');
+            if (question.image && medicalImages[question.image]) {
+                conceptImage.src = medicalImages[question.image];
+                imageContainer.style.display = 'flex';
+            } else {
+                imageContainer.style.display = 'none';
+            }
+            
+            // Load options
+            const optionsContainer = document.getElementById('options');
+            optionsContainer.innerHTML = '';
+            
+            question.options.forEach((option, index) => {
+                const optionElement = document.createElement('div');
+                optionElement.className = 'option';
+                optionElement.innerHTML = `
+                    <div class="option-letter">${String.fromCharCode(65 + index)}</div>
+                    <div class="option-text">${option}</div>
+                `;
+                optionElement.onclick = () => selectOption(index);
+                optionsContainer.appendChild(optionElement);
+            });
+            
+            // Reset feedback and rationale
+            document.getElementById('feedback').className = 'feedback';
+            document.getElementById('feedback').style.display = 'none';
+            document.getElementById('rationale').className = 'rationale';
+            document.getElementById('hint').className = 'hint';
+            
+            // Update navigation buttons
+            document.getElementById('prevBtn').disabled = currentQuestion === 0;
+            document.getElementById('nextBtn').textContent = currentQuestion === questions.length - 1 ? 'Finish ➡️' : 'Next ➡️';
+            document.getElementById('nextBtn').disabled = answers[currentQuestion] === null;
+            
+            // Reset cancel button visibility
+            document.getElementById('cancelBtn').classList.remove('show');
+            
+            // If this question was already answered, show the answer
+            if (answers[currentQuestion] !== null) {
+                selectOption(answers[currentQuestion], true);
+            }
+        }
+
+        function selectOption(index, fromMemory = false) {
+            // If we're just loading a previously selected answer, don't process it as new
+            if (fromMemory) {
+                highlightSelectedOption(index);
+                showFeedback(index);
+                return;
+            }
+            
+            // If an option is already selected, do nothing (unless we're loading from memory)
+            if (selectedOption !== null && !fromMemory) return;
+            
+            selectedOption = index;
+            answers[currentQuestion] = index;
+            
+            highlightSelectedOption(index);
+            showFeedback(index);
+            
+            // Enable next button
+            document.getElementById('nextBtn').disabled = false;
+        }
+
+        function cancelSelection() {
+            // Reset the selected option
+            selectedOption = null;
+            answers[currentQuestion] = null;
+            
+            // Remove highlighting from all options
+            const options = document.querySelectorAll('.option');
+            options.forEach(option => {
+                option.classList.remove('correct', 'incorrect', 'selected');
+            });
+            
+            // Hide feedback and rationale
+            document.getElementById('feedback').style.display = 'none';
+            document.getElementById('rationale').classList.remove('show');
+            
+            // Hide the cancel button
+            document.getElementById('cancelBtn').classList.remove('show');
+            
+            // Disable next button until a new selection is made
+            document.getElementById('nextBtn').disabled = true;
+        }
+
+        function highlightSelectedOption(index) {
+            const options = document.querySelectorAll('.option');
+            const question = questions[currentQuestion];
+            
+            options.forEach((option, i) => {
+                option.classList.remove('correct', 'incorrect', 'selected');
+                
+                if (i === index) {
+                    option.classList.add('selected');
+                    
+                    if (i === question.correct) {
+                        option.classList.add('correct');
+                        if (!answers[currentQuestion]) score++;
+                        
+                        // Don't show cancel button for correct answers
+                        document.getElementById('cancelBtn').classList.remove('show');
+                    } else {
+                        option.classList.add('incorrect');
+                        // Also highlight the correct answer
+                        options[question.correct].classList.add('correct');
+                        
+                        // Show cancel button only for wrong answers
+                        document.getElementById('cancelBtn').classList.add('show');
+                    }
+                }
+            });
+        }
+
+        function showFeedback(index) {
+            const question = questions[currentQuestion];
+            const feedback = document.getElementById('feedback');
+            const feedbackIcon = document.getElementById('feedbackIcon');
+            const feedbackText = document.getElementById('feedbackText');
+            const rationale = document.getElementById('rationale');
+            const rationaleText = document.getElementById('rationaleText');
+            
+            if (index === question.correct) {
+                feedback.className = 'feedback correct';
+                feedbackIcon.textContent = '✅';
+                feedbackText.textContent = 'Correct! Well done.';
+            } else {
+                feedback.className = 'feedback incorrect';
+                feedbackIcon.textContent = '❌';
+                feedbackText.textContent = `Incorrect. The right answer is: ${String.fromCharCode(65 + question.correct)}`;
+            }
+            
+            feedback.style.display = 'flex';
+            rationaleText.textContent = question.rationale;
+            rationale.classList.add('show');
+        }
+
+        function showHint() {
+            const hint = document.getElementById('hint');
+            const hintText = document.getElementById('hintText');
+            const question = questions[currentQuestion];
+            
+            hintText.textContent = question.hint;
+            hint.classList.add('show');
+        }
+
+        function nextCard() {
+            if (currentQuestion < questions.length - 1) {
+                currentQuestion++;
+                selectedOption = null;
+                loadQuestion();
+            } else {
+                // Quiz finished - show results
+                alert(`Quiz completed! Your score: ${score}/${questions.length}`);
+                currentQuestion = 0;
+                selectedOption = null;
+                score = 0;
+                answers = Array(questions.length).fill(null);
+                loadQuestion();
+            }
+        }
+
+        function previousCard() {
+            if (currentQuestion > 0) {
+                currentQuestion--;
+                selectedOption = answers[currentQuestion];
+                loadQuestion();
+            }
+        }
+
+        // Initialize the app
+        loadQuestion();
+    </script>
+</body>
+</html>
